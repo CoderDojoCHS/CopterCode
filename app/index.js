@@ -1,4 +1,6 @@
 var JSHINT = require('jshint').JSHINT;
+var arDrone = require('ar-drone');
+var vm = require('vm');
 var base = [
   "var arDrone = require('ar-drone');",
   "var client = arDrone.createClient();",
@@ -13,18 +15,20 @@ var base = [
 angular.module("App", ['ui.codemirror'])
   .controller('MainCtrl', function($scope) {
     $scope.errors = [];
-    $scope.code = base;
+
+    var code = localStorage.getItem('code');
+    $scope.code = code ? code : base;
+
     $scope.run = function() {
       if (JSHINT($scope.code, {})) {
-       eval($scope.code); 
+        vm.runInNewContext($scope.code, { require: require });
       } else {
         $scope.errors = JSHINT.errors;
       }
     };
 
     $scope.reset = function() {
-      $scope.errors = "";
-      $scope.code = base;
+      window.location.reload();
     };
 
     $scope.stop = function() {
@@ -34,4 +38,7 @@ angular.module("App", ['ui.codemirror'])
       client.land();
     };
 
+    $scope.save = function() {
+      localStorage.setItem('code', $scope.code);
+    };
   });
