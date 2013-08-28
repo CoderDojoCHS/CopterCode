@@ -7,7 +7,15 @@
     <link rel="stylesheet" href="app/components/codemirror/theme/monokai.css" type="text/css" media="screen" title="no title" charset="utf-8">
     <style>
       body {
-        margin-top: 90px;
+        margin-top: 70px;
+      }
+      .CodeMirror {
+        border: 1px solid #eee;
+        height: auto;
+      }
+      .CodeMirror-scroll {
+        overflow-y: hidden;
+        overflow-x: auto;
       }
     </style>
   </head>
@@ -16,11 +24,12 @@
       <div class="navbar-inner">
         <div class="container">
           <a class="brand" href="#">CopterCode</a>
+          <!-- <button class="btn pull-right" ng-click="cmds()">Commands</button> -->
         </div>
       </div>
     </div>
     <div class="container">
-      <div class="row">
+      <div class="row" style="margin-bottom: 20px;">
         <div class="btn-toolbar">
           <div class="btn-group pull-right">
             <button class="btn" ng-click="reset()">Reset</button>
@@ -30,17 +39,77 @@
           </div>
         </div>
       </div>
-      <div class="row" style="height: 400px;font-size: 2em;">
-        <textarea style="height: 100%;width: 100%;" ui-codemirror ng-model="code"></textarea>
+      <div class="row" >
+        
       </div>
-      <div class="row" style="height: 100px;font-size: 1em;color: darkred" ng-show="errors">
-        <p ng-repeat="err in errors">
-          Line: {{err.line}}
-          |
-          Char: {{err.character}}
-          |
-          Error: {{err.reason}}
-        </p>
+      <div class="row" >
+        <div class="well span4">
+          <table class="table">
+            <tr>
+              <th>Commands</th>
+            </tr>
+            <tr><td>takeoff(callback)</td></tr>
+            <tr><td>land(callback)</td></tr>
+            <tr><td>up(speed)</td></tr>
+            <tr><td>down(speed)</td></tr>
+            <tr><td>front(speed)</td></tr>
+            <tr><td>back(speed)</td></tr>
+            <tr><td>clockwise(speed)</td></tr>
+            <tr><td>counterClockwise(speed)</td></tr>
+            <tr><td>stop()</td></tr>
+            <tr><td>calibrate(device_num)</td></tr>
+            <tr>
+              <td>
+                animate(animation, duration)
+                <ul>
+                  <li>phiM30Deg</li>
+                  <li>phi30Deg</li>
+                  <li>thetaM30Deg</li>
+                  <li>thetaM30Deg</li>
+                  <li>theta20degYaw200deg</li>
+                  <li>theta20degYawM200deg</li>
+                  <li>turnaround</li>
+                  <li>turnaroundGodown</li>
+                  <li>yawShake</li>
+                  <li>yawDance</li>
+                  <li>phiDance</li>
+                  <li>thetaDance</li>
+                  <li>vzDance</li>
+                  <li>wave</li>
+                  <li>phiThetaMixed</li>
+                  <li>doublePhiThetaMixed</li>
+                  <li>flipAhead</li>
+                  <li>flipBehind</li>
+                  <li>flipLeft</li>
+                  <li>flipRight</li>
+                  
+                </ul>
+                <code>client.animate('flipLeft', 1500);</code>
+                <br />
+                <small>Please note that the drone will need a good amount of altitude and headroom to perform a flip. So be careful!</small>
+              </td>
+            </tr>
+
+          </table>
+          <h3>client.takeoff(callback)</h3>
+          <p>Sets the internal fly state to true, callback is invoked after the drone reports that it is hovering.</p>
+          <h3>client.land(callback)</h3>
+          <p>Sets the internal fly state to false, callback is invoked after the drone reports it has landed.</p>
+    
+        </div>
+        <div class="span7">
+          <div class="alert alert-danger" style="font-size: .7em;color: darkred" ng-show="errors">
+            <p ng-repeat="err in errors">
+              (L{{err.line}}:C{{err.character}}) {{err.reason}}
+            </p>
+          </div>
+          <div style="font-size: 1.2em;">
+            <textarea style="height: 2000px;width: 100%;" ui-codemirror="{
+              lineNumbers: true,
+              mode: 'javascript'
+            }" ng-model="code"></textarea>
+          </div>
+        </div>
       </div>
     </div>
     <script src="app/components/codemirror/lib/codemirror.js"></script>
